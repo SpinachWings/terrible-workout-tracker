@@ -4,6 +4,7 @@ import WorkoutEditor from './components/WorkoutEditor.jsx'
 import CompareView from './components/CompareView.jsx'
 import { loadWorkouts, saveWorkouts, loadPrefs, savePrefs, THEMES } from './storage.js'
 import { toKey, fromKey } from './dates.js'
+import { uid } from './storage.js'
 import { normName } from './stats.js'
 
 export default function App() {
@@ -53,6 +54,29 @@ export default function App() {
       return next
     })
     setOpenDate(null)
+  }
+
+  function copyWorkout(fromKey_, toKey_) {
+    const src = workouts[fromKey_]
+    if (!src || !toKey_ || toKey_ === fromKey_) return
+    const exercises = src.exercises.map((ex) => ({
+      ...ex,
+      id: uid(),
+      sets: ex.sets.map((s) => ({ ...s, id: uid(), reps: '', weight: '' })),
+    }))
+    setWorkouts((ws) => {
+      const dest = ws[toKey_] || { date: toKey_, title: '', exercises: [] }
+      return {
+        ...ws,
+        [toKey_]: {
+          ...dest,
+          title: dest.title.trim() ? dest.title : src.title,
+          exercises: [...dest.exercises, ...exercises],
+        },
+      }
+    })
+    goToDate(toKey_)
+    setOpenDate(toKey_)
   }
 
   function closeEditor() {
@@ -154,6 +178,7 @@ export default function App() {
 
       {openDate && workouts[openDate] && (
         <WorkoutEditor
+          key={openDate}
           workout={workouts[openDate]}
           defaultUnit={prefs.unit}
           exerciseNames={exerciseNames}
@@ -162,6 +187,7 @@ export default function App() {
           onDelete={() => deleteWorkout(openDate)}
           onClose={closeEditor}
           onCompare={() => openCompare(openDate)}
+          onCopy={(to) => copyWorkout(openDate, to)}
         />
       )}
 

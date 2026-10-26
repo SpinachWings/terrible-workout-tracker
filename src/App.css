@@ -337,6 +337,11 @@ button, input, select { font: inherit; color: inherit; }
   padding: 14px 22px; border-top: 1px solid var(--line); background: var(--surface);
 }
 .spacer { flex: 1; }
+.copy-box { display: flex; align-items: center; gap: 8px; }
+.copy-box input {
+  height: 36px; padding: 0 8px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2);
+}
 
 /* ---------- compare ---------- */
 .modal {

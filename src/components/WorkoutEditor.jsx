@@ -4,9 +4,11 @@ import { uid } from '../storage.js'
 import { workoutStats, convert, fmt } from '../stats.js'
 
 export default function WorkoutEditor({
-  workout, defaultUnit, exerciseNames, canCompare, onChange, onDelete, onClose, onCompare,
+  workout, defaultUnit, exerciseNames, canCompare, onChange, onDelete, onClose, onCompare, onCopy,
 }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [copying, setCopying] = useState(false)
+  const [copyTo, setCopyTo] = useState('')
   const [dragId, setDragId] = useState(null)      // exercise being dragged
   const [handleId, setHandleId] = useState(null)  // exercise whose handle is held
   const [overIndex, setOverIndex] = useState(null)
@@ -232,7 +234,33 @@ export default function WorkoutEditor({
             {confirmDelete ? 'Click again to delete' : 'Delete workout'}
           </button>
           <div className="spacer" />
-          <button className="btn" onClick={onCompare} disabled={!canCompare}>Compare…</button>
+          {copying ? (
+            <div className="copy-box">
+              <input
+                type="date"
+                aria-label="Copy to date"
+                value={copyTo}
+                onChange={(e) => setCopyTo(e.target.value)}
+              />
+              <button
+                className="btn primary"
+                disabled={!copyTo || copyTo === workout.date}
+                onClick={() => onCopy(copyTo)}
+                title="Copies exercises and sets, without reps or weight"
+              >Copy</button>
+              <button className="btn ghost" onClick={() => setCopying(false)}>Cancel</button>
+            </div>
+          ) : (
+            <>
+              <button
+                className="btn"
+                onClick={() => setCopying(true)}
+                disabled={workout.exercises.length === 0}
+                title="Copy exercises and sets to another day"
+              >Copy to…</button>
+              <button className="btn" onClick={onCompare} disabled={!canCompare}>Compare…</button>
+            </>
+          )}
           <button className="btn primary" onClick={onClose}>Done</button>
         </footer>
       </aside>
