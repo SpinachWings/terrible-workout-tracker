@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Calendar from './components/Calendar.jsx'
 import WorkoutEditor from './components/WorkoutEditor.jsx'
 import CompareView from './components/CompareView.jsx'
-import { loadWorkouts, saveWorkouts, loadPrefs, savePrefs } from './storage.js'
+import { loadWorkouts, saveWorkouts, loadPrefs, savePrefs, THEMES } from './storage.js'
 import { toKey, fromKey } from './dates.js'
 import { normName } from './stats.js'
 
@@ -16,6 +16,11 @@ export default function App() {
 
   useEffect(() => saveWorkouts(workouts), [workouts])
   useEffect(() => savePrefs(prefs), [prefs])
+  useEffect(() => {
+    const root = document.documentElement
+    if (THEMES.some((t) => t.id === prefs.theme) && prefs.theme !== 'system') root.dataset.theme = prefs.theme
+    else delete root.dataset.theme
+  }, [prefs.theme])
 
   const sortedDates = useMemo(
     () => Object.keys(workouts).sort().reverse(),
@@ -94,6 +99,16 @@ export default function App() {
           <span>Workout Tracker</span>
         </div>
         <div className="topbar-actions">
+          <select
+            className="theme-select"
+            aria-label="Colour theme"
+            value={prefs.theme}
+            onChange={(e) => setPrefs((p) => ({ ...p, theme: e.target.value }))}
+          >
+            {THEMES.map((t) => (
+              <option key={t.id} value={t.id}>{t.label}</option>
+            ))}
+          </select>
           <div className="segmented" role="group" aria-label="Default unit">
             {['kg', 'lbs'].map((u) => (
               <button

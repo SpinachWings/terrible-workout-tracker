@@ -19,11 +19,20 @@ export function saveWorkouts(workouts) {
   }
 }
 
+export const THEMES = [
+  { id: 'system', label: 'System' },
+  { id: 'light', label: 'Light' },
+  { id: 'dark', label: 'Dark' },
+  { id: 'ocean', label: 'Ocean' },
+  { id: 'forest', label: 'Forest' },
+  { id: 'grape', label: 'Grape' },
+]
+
 export function loadPrefs() {
   try {
-    return { unit: 'kg', ...(JSON.parse(localStorage.getItem(PREF_KEY)) || {}) }
+    return { unit: 'kg', theme: 'system', ...(JSON.parse(localStorage.getItem(PREF_KEY)) || {}) }
   } catch {
-    return { unit: 'kg' }
+    return { unit: 'kg', theme: 'system' }
   }
 }
 
