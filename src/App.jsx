@@ -56,8 +56,6 @@ export default function App() {
     setOpenDate(null)
   }
 
-  // Copies exercises and sets (not reps/weight) onto another day, appending to
-  // anything already logged there, then opens that day.
   function copyWorkout(fromKey_, toKey_) {
     const src = workouts[fromKey_]
     if (!src || !toKey_ || toKey_ === fromKey_) return
