@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import Calendar from './components/Calendar.jsx'
+import WorkoutList from './components/WorkoutList.jsx'
 import WorkoutEditor from './components/WorkoutEditor.jsx'
 import CompareView from './components/CompareView.jsx'
 import { loadWorkouts, saveWorkouts, loadPrefs, savePrefs, THEMES } from './storage.js'
@@ -133,6 +134,20 @@ export default function App() {
               <option key={t.id} value={t.id}>{t.label}</option>
             ))}
           </select>
+          <div className="segmented" role="group" aria-label="Workout layout">
+            {[
+              ['calendar', 'Calendar'],
+              ['list', 'List'],
+            ].map(([id, label]) => (
+              <button
+                key={id}
+                className={prefs.layout === id ? 'on' : ''}
+                onClick={() => setPrefs((p) => ({ ...p, layout: id }))}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
           <div className="segmented" role="group" aria-label="Default unit">
             {['kg', 'lbs'].map((u) => (
               <button
@@ -157,23 +172,37 @@ export default function App() {
       </header>
 
       <main className="main">
-        <Calendar
-          year={view.year}
-          month={view.month}
-          todayKey={toKey(today)}
-          workouts={workouts}
-          onChangeView={setView}
-          onDayClick={handleDayClick}
-          footer={
-            <>
+        {prefs.layout === 'list' ? (
+          <WorkoutList
+            workouts={workouts}
+            sort={prefs.listSort === 'name' ? 'name' : 'date'}
+            onChangeSort={(listSort) => setPrefs((p) => ({ ...p, listSort }))}
+            onOpen={setOpenDate}
+            footer={
               <span>
-                <b>{thisMonthCount}</b> workout{thisMonthCount === 1 ? '' : 's'} this month ·{' '}
-                <b>{sortedDates.length}</b> total
+                <b>{sortedDates.length}</b> workout{sortedDates.length === 1 ? '' : 's'} total
               </span>
-              <span className="hint">Click any date to log or open a workout</span>
-            </>
-          }
-        />
+            }
+          />
+        ) : (
+          <Calendar
+            year={view.year}
+            month={view.month}
+            todayKey={toKey(today)}
+            workouts={workouts}
+            onChangeView={setView}
+            onDayClick={handleDayClick}
+            footer={
+              <>
+                <span>
+                  <b>{thisMonthCount}</b> workout{thisMonthCount === 1 ? '' : 's'} this month ·{' '}
+                  <b>{sortedDates.length}</b> total
+                </span>
+                <span className="hint">Click any date to log or open a workout</span>
+              </>
+            }
+          />
+        )}
       </main>
 
       {openDate && workouts[openDate] && (
