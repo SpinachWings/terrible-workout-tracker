@@ -260,6 +260,42 @@ button, input, select { font: inherit; color: inherit; }
 }
 .cal-foot b { color: var(--ink); }
 
+/* ---------- list view (pink in every theme) ---------- */
+.workout-list {
+  --pink: #e8338f;
+  --pink-soft: #fde4f0;
+  --pink-soft-2: #fbcde3;
+  --pink-ink: #4a0f2d;
+  width: 100%; max-width: 760px; align-self: flex-start;
+  background: var(--pink-soft); border: 1px solid var(--pink-soft-2); color: var(--pink-ink);
+  border-radius: 18px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.list-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 18px 20px; background: var(--pink); color: #fff;
+}
+.list-head h2 { margin: 0; font-size: 22px; letter-spacing: -.02em; }
+.list-head .segmented { background: rgba(255, 255, 255, .2); border-color: rgba(255, 255, 255, .35); }
+.list-head .segmented button { color: #fff; }
+.list-head .segmented button.on { background: #fff; color: var(--pink); }
+.list-items { list-style: none; margin: 0; padding: 8px 12px; display: flex; flex-direction: column; gap: 8px; }
+.list-item {
+  width: 100%; display: flex; align-items: center; gap: 14px; text-align: left;
+  padding: 12px 14px; border: 1px solid var(--pink-soft-2); border-radius: 12px;
+  background: #fff; color: var(--pink-ink); cursor: pointer; transition: background .12s;
+}
+.list-item:hover { background: var(--pink-soft-2); }
+.list-item:focus-visible { outline: 2px solid var(--pink); outline-offset: 1px; }
+.list-check { flex: none; width: 20px; height: 20px; border: 2px solid var(--pink); border-radius: 50%; }
+.list-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.list-name { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.list-date { font-size: 12px; opacity: .7; }
+.list-count { font-size: 12px; opacity: .7; white-space: nowrap; }
+.workout-list .empty { color: var(--pink-ink); opacity: .7; }
+.workout-list .cal-foot { border-top-color: var(--pink-soft-2); color: var(--pink-ink); }
+.workout-list .cal-foot b { color: var(--pink-ink); }
+
 /* ---------- overlay / drawer ---------- */
 .overlay {
   position: fixed; inset: 0; z-index: 10;

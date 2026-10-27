@@ -28,11 +28,13 @@ export const THEMES = [
   { id: 'grape', label: 'Grape' },
 ]
 
+const DEFAULT_PREFS = { unit: 'kg', theme: 'system', layout: 'calendar', listSort: 'date' }
+
 export function loadPrefs() {
   try {
-    return { unit: 'kg', theme: 'system', ...(JSON.parse(localStorage.getItem(PREF_KEY)) || {}) }
+    return { ...DEFAULT_PREFS, ...(JSON.parse(localStorage.getItem(PREF_KEY)) || {}) }
   } catch {
-    return { unit: 'kg', theme: 'system' }
+    return { ...DEFAULT_PREFS }
   }
 }
 
